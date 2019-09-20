@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>联系人管理</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	</head>
+
+	<body>
+		<script src="js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">联系人管理</h1>
+		</header>
+		<div class="mui-content">
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnAddContact">添加联系人</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnDeleteContact">删除联系人</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnSearchContact">查找联系人</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnModifyContact">修改联系人</button>
+		</div>
+		<script type="text/javascript">
+			mui.plusReady(function(){
+				// 设置通讯录对象
+				var addressBookObj = undefined
+				// 扩展API加载完毕，现在可以正常调用扩展API
+				plus.contacts.getAddressBook( plus.contacts.ADDRESSBOOK_PHONE, function success(addressbook){
+					// 获取通讯录对象
+					addressBookObj = addressbook
+					// 点击添加联系人事件
+					$("#btnAddContact").bind('tap', function btnAdd() {
+						// 向通讯录中添加联系人
+						var concat = addressBookObj.create()
+						// 联系人姓名
+						concat.name = { givenName: 'a哈哈哈'},
+						// 联系人电话 类型 电话值 是否为首选项
+						concat.phoneNumbers = [{ type:'mobile', value: '17609906986', preferred: true}],
+						// 保存联系人
+						concat.save()
+						mui.alert('添加成功！')
+					})
+					
+					// 点击查找联系人
+					$("#btnSearchContact").bind('tap',function btnSearch(){
+						addressBookObj.find(["displayName","phoneNumbers"], function success(concats){
+							concats.map((item)=>{
+								// 输出查找到的完整姓名
+								// alert(item.displayName)
+								// 查找联系人的电话
+								alert(item.phoneNumbers[0].value)
+							})
+						}, function err(e){
+							alert(e.message)
+							// 查找以宋开头的联系人的名字
+						},{filter:[{multiple:true,logic:"and",field:"displayName",value:"宋**"}],})
+					})
+				}, function error(e){
+					alert(e.message)
+				})
+				
+				// 点击删除联系人
+			})
+		</script>
+		
+	</body>
+
+</html>

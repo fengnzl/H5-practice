@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>二维码扫描</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	</head>
+
+	<body>
+		<script src="js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+		<div class="mui-content">
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnScan">扫描二维码</button>
+			<br>
+			<button type="button" class="mui-btn mui-btn-green mui-btn-block" id="btnSelect">从相册中选择</button>
+		</div>
+		<div id="info"></div>
+		<script type="text/javascript">
+			mui.plusReady(function(){
+				// 绑定扫描事件 打开新的页面
+				$("#btnScan").bind('tap',function(){
+					mui.openWindow({
+						url:"barcode_scan.html"
+					})
+				})
+				// 绑定从相册册中选择事件
+				$("#btnSelect").bind('tap',function(){
+					plus.gallery.pick(function(path){
+						plus.barcode.scan(path,function(type, code, file){
+								var result = "type:" + type + "<br /> code:" + code + "<br/>file:" + file
+								// 将回调信息输出到页面上
+								$("#info").html(result)
+							},function(error){
+								plus.nativeUI.alert('无法识别图片')
+							})
+					},function(err){
+						plus.nativeUI.alert('Failed:'+err.message)
+					})
+				})
+		
+			})
+		</script>
+	</body>
+
+</html>

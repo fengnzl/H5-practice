@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Camera摄像头</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	</head>
+
+	<body>
+		<script src="js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">Camera</h1>
+		</header>
+		<div class="mui-content">
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnPhoto">拍照</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnVideo">摄像</button>
+		</div>
+		<ul class="mui-table-view" id="listItem">
+				
+		</ul>
+		<img id="img" width="100%">
+		<video width="100%" id="videoHandler" controls="controls">
+		</video>
+		<script type="text/javascript">
+			mui.plusReady(function(){
+				$("#btnPhoto").bind('tap', function() {
+					// 获取camera对象
+					var camera = plus.camera.getCamera()
+					// 调用拍照功能
+					camera.captureImage(function success(path){
+						var listStr = "<li class=\"mui-table-view-cell\">"+
+							"<a class=\"mui-navigate-right\">"+
+									path+
+								"</a>"+
+							"</li>"
+						$("#listItem").append(listStr)
+						// 解析文件路径
+						plus.io.resolveLocalFileSystemURL(path, function(fs){
+							// 显示图片
+							$("#img").attr('src',fs.fullPath)
+							console.log(fs)
+						})
+					},function error(e){
+						alert(e.message)
+					},{filename:"_doc/photo"})
+				})
+				
+				// 录像事件
+				$("#btnVideo").bind('tap',function(){
+					// 获取camera对象
+					var camera = plus.camera.getCamera()
+					// 调用摄像功能
+					camera.startVideoCapture(function success(path){
+						var listStr = "<li class=\"mui-table-view-cell\">"+
+							"<a class=\"mui-navigate-right\">"+
+									path+
+								"</a>"+
+							"</li>"
+						$("#listItem").append(listStr)
+						plus.io.resolveLocalFileSystemURL(path,function(path){
+							$("#videoHandler").attr('src',path.fullPath)
+						})
+					},function err(e){
+						alert(e.message)
+					},{filename:"_doc/video"})
+				})
+			})
+		</script>
+	</body>
+	
+</html>

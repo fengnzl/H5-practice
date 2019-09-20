@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>扫描</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<script src="js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">扫描</h1>
+		</header>
+		<div class="mui-content">
+			<div id="scanContainer" style="height: 500px;">
+				
+			</div>
+			<div id="info"></div>
+		</div>
+		<script type="text/javascript">
+			mui.plusReady(function(){
+				// 创建扫码识别控件
+				var barScan = new plus.barcode.Barcode('scanContainer')
+				// 开始扫码识别
+				barScan.start({conserve:true,filename:"_doc/barcode/",vibrate:true,sound: "default"})
+				// 扫描成功的回调事件
+				barScan.onmarked = function(type, code, file){
+					var result = "type:" + type + "<br /> code:" + code + "<br/>file:" + file
+					// 将回调信息输出到页面上
+					// $("#info").html(result)
+					document.getElementById('info').innerHTML = result
+				}
+			})
+		</script>
+	</body>
+
+</html>

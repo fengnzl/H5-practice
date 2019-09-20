@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>audio音频</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	</head>
+
+	<body>
+		<script src="js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+		<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnStartRecord">开始录音</button>
+		<ul class="mui-table-view" id="liRecordFiles">
+			
+		</ul>
+		<div id="divRecord">
+			开始录音：<span id="recordTime"></span>
+					<br>
+			<button type="button" class="mui-btn mui-btn-blue" id="btnStopRecord">停止录音</button>
+		</div>
+		<br>
+		<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnStopPlayer">停止播放</button>
+		<script type="text/javascript">
+			mui.plusReady(function() {
+				var recorder = undefined
+				var recordTimer = undefined
+				var player = undefined
+				$("#btnStartRecord").bind('tap',function(){
+					startRecord()
+				})
+				$("#btnStopRecord").bind('tap',function(){
+					stopRecord()
+				})
+				$("#btnStopPlayer").bind('tap',function(){
+					stopPlayer()
+				})
+				
+			})
+
+			// 开始录音函数
+			function startRecord(){
+				var time = 0
+				recordTimer = setInterval(function(){
+					time++
+					$("#recordTime").html(time)
+				},1000)
+				// 获取当前设备的录音对象
+				recorder = plus.audio.getRecorder()
+				// 开始录音
+				recorder.record({filename:"_doc/audio"}, function(filePath){
+					// 进行文件处理
+					plus.io.resolveLocalFileSystemURL(filePath,function(fs){
+						console.log(filePath)
+						console.log(fs)
+						var listStr = "<li class=\"mui-table-view-cell\">" +
+											"<a class=\"mui-navigate-right recordItem\" >" +
+												fs.name +
+											"</a>"
+										"</li>"
+						$("#liRecordFiles").append(listStr)
+						// 音乐播放事件监听
+						$(".recordItem").bind('tap',function(){
+							var name = $(this).text()
+							var path ="_doc/audio/" +name
+							console.log(path)
+							player = plus.audio.createPlayer(path)
+							player.play(function(){
+								alert( "Audio play success!" );
+							},function(e){
+								alert("message:"+e.message+"<br> code:" + e.code)
+							})
+						})
+						// playAudio()
+					},function(e){
+						console.log("读取录音文件错误：" + e.message)
+						return
+					})
+				},function(e){
+					console.log(e.code+e.message)
+				})
+			}
+			// 停止录音
+			function stopRecord(){
+				clearInterval(recordTimer)
+				// 停止录音
+				recorder.stop()
+			}
+			// 播放录音
+			function playAudio() {
+				$(".recordItem").bind('tap',function(){
+					var name = $(this).text()
+					var path ="_doc/audio/" +name
+					console.log(path)
+					var player = plus.audio.createPlayer(path)
+					player.play(function(){
+						console.log("play ended")
+					},function(e){
+						console.log("message:"+e.message)
+					})
+				})
+			}
+			// 停止播放音乐
+			function stopPlayer(){
+				console.log('停止播放',player)
+				player.stop()
+			}
+		</script>
+	</body>
+
+</html>
