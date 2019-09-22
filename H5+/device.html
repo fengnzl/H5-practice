@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>设备管理</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">设备管理</h1>
+		</header>
+		<div class="mui-content">
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnInfo">设备信息</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnDail">打电话</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnBeep">蜂鸣声</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnShock">震动</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnNet">网络信息</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnOS">OS</button>
+		</div>
+		<script type="text/javascript">
+			mui.plusReady(function(){
+				// 获取设备信息
+				document.getElementById('btnInfo').addEventListener('click',function click(){
+					plus.device.getInfo({
+						success(ret){
+							mui.confirm(`设备的国际移动设备身份码:${ret.imei}\n设备的国际移动用户识别码${ret.imsi}\n设备的标识${ret.uuid}`,'设备信息')
+						},
+						fail(e){
+							alert('获取设备信息失败'+JSON.stringify(e))
+						},
+						// complete(){
+						// 	alert('无论成功或失败都会调用此信息')
+						// }
+					})
+				})
+				// 打电话
+				document.getElementById('btnDail').addEventListener('click',function click(){
+					plus.device.dial('17609906986',true)
+				})
+				// 蜂鸣声
+				document.getElementById('btnBeep').addEventListener('click', function(){
+					// 重复发出蜂鸣声 2次
+					plus.device.beep(2)
+				})
+				// 震动
+				document.getElementById('btnShock').addEventListener('click', function(){
+					// 设备的震动时间 为1000秒 默认500秒
+					plus.device.vibrate(1000)
+				})
+				// 网络信息
+				document.getElementById('btnNet').addEventListener('click',function() {
+					var types = {}; 
+					types[plus.networkinfo.CONNECTION_UNKNOW] = "Unknown connection"; 
+					types[plus.networkinfo.CONNECTION_NONE] = "None connection"; 
+					types[plus.networkinfo.CONNECTION_ETHERNET] = "Ethernet connection"; 
+					types[plus.networkinfo.CONNECTION_WIFI] = "WiFi connection"; 
+					types[plus.networkinfo.CONNECTION_CELL2G] = "Cellular 2G connection"; 
+					types[plus.networkinfo.CONNECTION_CELL3G] = "Cellular 3G connection"; 
+					types[plus.networkinfo.CONNECTION_CELL4G] = "Cellular 4G connection"; 
+					// 获取设备当前连接的网络类型
+					let netInfo = plus.networkinfo.getCurrentType()
+					alert('当前网络信息：'+types[netInfo])
+				})
+				// 获取当前OS信息
+				document.getElementById('btnOS').addEventListener('click', function click(){
+					// OS模块管理操作系统信息
+					mui.confirm(`系统语言${plus.os.language}\n系统名称${plus.os.name}\n系统供应商${plus.os.vendor}\n系统版本信息${plus.os.version}`,'系统信息')
+				})
+			})
+		</script>
+	</body>
+
+</html>

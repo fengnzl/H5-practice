@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>系统事件</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">系统事件</h1>
+		</header>
+		<div class="mui-content">
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnError">错误事件</button>
+		</div>
+		<script type="text/javascript">
+			document.addEventListener('plusready',function ready(){
+				// 运行环境从前台切换到后台
+				document.addEventListener('pause',function pause(){
+					console.log('pause')
+				})
+				// 运行环境从后台切换到前台
+				document.addEventListener('resume',function resume(){
+					console.log('resume')
+				})
+				// 网络变换
+				document.addEventListener('netchange',function netChange(){
+					var nt = plus.networkinfo.getCurrentType();
+						switch (nt){
+							case plus.networkinfo.CONNECTION_ETHERNET:
+							case plus.networkinfo.CONNECTION_WIFI:
+							alert("Switch to Wifi networks!"); 
+							break; 
+							case plus.networkinfo.CONNECTION_CELL2G:
+							case plus.networkinfo.CONNECTION_CELL3G:
+							case plus.networkinfo.CONNECTION_CELL4G:
+							alert("Switch to Cellular networks!");  
+							break; 
+							default:
+							alert("Not networks!"); 
+							break;
+						}
+				})
+				// 错误事件 此事件仅在错误页面中才触发。
+				document.getElementById('btnError').addEventListener("click", function(){
+					mui.openWindow({url:'http://www.123432435.com',styles:{
+						errorPage:'error.html'
+					}})
+				});
+	
+			})
+		</script>
+	</body>
+
+</html>

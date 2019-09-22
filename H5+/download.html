@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>手机下载</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	</head>
+
+	<body>
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">下载管理</h1>
+		</header>
+		<div class="mui-content">
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnDownload">点击下载</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnPause">暂停下载</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnResume">恢复下载</button>
+			<button type="button" class="mui-btn mui-btn-blue mui-btn-block" id="btnAbort">取消下载</button>
+		</div>
+		<ul class="mui-table-view" id="list">
+				
+		</ul>
+		<audio controls="controls" height="100" width="100" id="music">
+		</audio>
+		<script type="text/javascript">
+			mui.plusReady(function() {
+				document.getElementById('btnDownload').addEventListener('click', function() {
+					var dtask = plus.downloader.createDownload(
+						'http://mobileoc.music.tc.qq.com/M5000048B5BC2LU86i.mp3?vkey=4F7FB39B37695485483F4A4AE477E6609BDD32F4EE649B1D6D6AA09A58024A824122A6A8BB2C1BDF2FDDC7F3854F394597742B8AC8CB93D6&guid=jlwz.cn&uin=0&fromtag=8', {
+							filename: '_doc/download/a.mp3'},function complete(download, status){
+							if (status == 200) {
+								plus.io.resolveLocalFileSystemURL(download.filename,function success(entry){
+									document.getElementById('list').append('<p>'+download.filename+"</p>")
+									document.getElementById('list').append(`<p>${entry.fullPath}</p>`)
+									document.getElementById('music').setAttribute('src',entry.fullPath)
+								})
+							} else {
+								mui.toast('下载失败' + status)
+							}
+						})
+					// 监听下载任务
+					dtask.addEventListener("statechanged", onStateChanged, false);
+					// 开始下载任务
+					dtask.start()
+					// 暂停下载任务
+					document.getElementById('btnPause').addEventListener('click',function click(){
+						dtask.pause()
+					})
+					// 恢复下载任务
+					document.getElementById('btnResume').addEventListener('click',function click(){
+						dtask.resume()
+					})
+					// 取消下载任务
+					document.getElementById('btnAbort').addEventListener('click',function click(){
+						dtask.abort()
+					})
+				})
+				// 监听下载任务状态 
+				function onStateChanged(task, status) {
+					switch (task.state){
+						case 1: //开始
+							console.log('开始下载')
+							break;
+						case 2: //连接服务器
+							console.log('已经连接到服务器')
+							break;
+						case 3: // 下载数据跟新
+							console.log(task.downloadedSize+'/' +task.totalSize)
+							break;
+						case 4: // 下载完成
+							console.log('下载完成' +task.totalSize)
+							break;;
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

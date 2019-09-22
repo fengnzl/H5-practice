@@ -5,12 +5,12 @@
 		<meta charset="utf-8">
 		<title>联系人管理</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="css/mui.css" rel="stylesheet" />
+		<link href="../css/mui.css" rel="stylesheet" />
 		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 	</head>
 
 	<body>
-		<script src="js/mui.js"></script>
+		<script src="../js/mui.js"></script>
 		<script type="text/javascript">
 			mui.init()
 		</script>
@@ -49,9 +49,9 @@
 						addressBookObj.find(["displayName","phoneNumbers"], function success(concats){
 							concats.map((item)=>{
 								// 输出查找到的完整姓名
-								// alert(item.displayName)
+								alert(item.displayName)
 								// 查找联系人的电话
-								alert(item.phoneNumbers[0].value)
+								// alert(item.phoneNumbers[0].value)
 							})
 						}, function err(e){
 							alert(e.message)
@@ -61,8 +61,39 @@
 				}, function error(e){
 					alert(e.message)
 				})
-				
+				// 点击修改联系人
+				document.getElementById('btnModifyContact').addEventListener('click',function btnModify(){
+					addressBookObj.find("", function success(concats) {
+						concats.map(item => {
+							alert(item.name.givenName)
+							//  修改联系人只能使用 联系人名称name对象中的属性进行修改
+							item.name.givenName = 'alalalal'
+							item.save( function () {
+								alert( "修改联系人成功" );
+							}, function ( e ) {
+								alert( "修改联系人失败：" + e.message );
+							})
+						})
+					},function error(e){
+						alert(e.message)
+					},{filter:[{multiple:true,logic:"and",field:"displayName",value:"a**"}],})// 查找 a开头的联系人
+				})
 				// 点击删除联系人
+				$('#btnDeleteContact').click(function(){
+					addressBookObj.find('',function success(contacts) {
+						contacts.map(item=>{
+							let name = item.name.givenName
+							// 删除联系人
+							item.remove(function success(){
+								alert(`删除联系人${name}成功`)
+							}, function error(e){
+								alert('删除联系人失败'+e.message)
+							})
+						})
+					},function err(e){
+						alert(e.message)
+					},{filter:[{multiple:true,logic:'and',field:'displayName',value:'a**'}]})
+				})
 			})
 		</script>
 		
