@@ -1,5 +1,5 @@
 # H5-practice
-混合模式app开发中通过javascript结合html5+SDK进行原生组件调用的相关实例。本示例`demo`根据[hbuilder开发移动app视频教程mui视频教程html5视频教程](https://edu.csdn.net/course/play/2949/48552)编写，相关api[文档地址](https://www.dcloud.io/docs/api/zh_cn/accelerometer.html)
+混合模式 app 开发中通过 javascript 结合 html5+SDK 进行原生组件调用的相关实例。本示例 `demo` 根据[hbuilder开发移动app视频教程mui视频教程html5视频教程](https://edu.csdn.net/course/play/2949/48552)编写，相关api[文档地址](https://www.dcloud.io/docs/api/zh_cn/accelerometer.html)
 
 ## 1[手机加速感应器]
 
